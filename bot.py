@@ -6,9 +6,6 @@ from telebot import types
 
 bot = telebot.TeleBot(config.TOKEN)
 
-global name
-global surname
-
 
 @bot.message_handler(commands=['start'])
 def welcome(message):
@@ -35,14 +32,12 @@ def welcome(message):
         bot.send_message(message.from_user.id, 'Напиши /start');
 
 def get_name(message): #получаем имя
-    global name
     name = message.text;
     bot.send_message(message.from_user.id, 'Введите вашу настоящую фамилию: ');
-    bot.register_next_step_handler(message, get_surname);
+    bot.register_next_step_handler(message, get_surname, name);
 
 
-def get_surname(message): #получаем фамилию
-    global surname
+def get_surname(message, name): #получаем фамилию
     surname = message.text;
     keyboard = types.InlineKeyboardMarkup(); #наша клавиатура
     key_yes = types.InlineKeyboardButton(text='Да', callback_data='yes'); #кнопка «Да»
@@ -59,6 +54,8 @@ def callback_worker(call):
         connect = sqlite3.connect('KompoDB.db')
         cursor = connect.cursor()
         people_id = call.from_user.id
+        name = get_surname.name
+        surname = get_surname.surname
         cursor.execute(f"SELECT id FROM users WHERE id = {people_id}")
         data = cursor.fetchone()
         # check id in db
@@ -122,41 +119,17 @@ def callback_worker(call):
         bot.send_message(call.message.chat.id, 'Курс: \n Номер теста: \n 1: 9/10 \n 2: \n 3: \n Проходной балл: 100 \n Ваш балл: 9  ')
 
     elif call.data == 'test1':
-        markup = types.InlineKeyboardMarkup(row_width=2)
-        bot.send_message(call.message.chat.id, '1) Сколько этапов включает в себя 5s ?')
-        key1 = types.InlineKeyboardButton("5", callback_data='keyAnswer1')
-        key2 = types.InlineKeyboardButton("6", callback_data='keyAnswer2')
-        key3 = types.InlineKeyboardButton("3", callback_data='keyAnswer3')
-        markup.add(key1, key2, key3)
-        bot.send_message(call.message.chat.id, 'Выберите вариант ответа : ', reply_markup=markup)
-        bot.register_next_step_handler(message, markup1)
+        for i in range(10):
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            key1 = types.InlineKeyboardButton("1", callback_data='keyAnswer1')
+            key2 = types.InlineKeyboardButton("2", callback_data='keyAnswer2')
+            key3 = types.InlineKeyboardButton("3", callback_data='keyAnswer3')
+            markup.add(key1, key2, key3)
+            bot.send_message(call.message.chat.id, 'Выберите вариант ответ на вопрос ' + str(i+1) +' :', reply_markup=markup)
 
-        bot.send_message(call.message.chat.id, '2) В чем заключается основная задача 5S ?')
-        markup1 = types.InlineKeyboardMarkup(row_width=2)
-        key4 = types.InlineKeyboardButton("Организация обслуживания оборудования", callback_data='keyAnswer4')
-        key5 = types.InlineKeyboardButton("Улучшение качества продукции", callback_data='keyAnswer5')
-        key6 = types.InlineKeyboardButton("Организация рабочего места с целью повышения /n эффективности и управляемости рабочей зоны", callback_data='keyAnswer6')
-        markup1.add(key4, key5, key6)
-        bot.send_message(call.message.chat.id, 'Выберите вариант ответа : ', reply_markup=markup1)
-
-        bot.send_message(call.message.chat.id, '3) Что подразумевается под сортировкой ?')
-        markup2 = types.InlineKeyboardMarkup(row_width=2)
-        key7 = types.InlineKeyboardButton("Расположить предметы так, чтобы их было легко использовать", callback_data='keyAnswer7')
-        key8 = types.InlineKeyboardButton("Разложить инструменты и материалы по степени важности", callback_data='keyAnswer8')
-        key9 = types.InlineKeyboardButton("Удалить из рабочей зоны все ненужное ", callback_data='keyAnswer9')
-        markup2.add(key7, key8, key9)
-        bot.send_message(call.message.chat.id, 'Выберите вариант ответа : ', reply_markup=markup2)
-
-
-    elif call.data == 'keyAnswer7':
-        bot.send_message(call.message.chat.id, 'Результат теста 1/3'+'\n'+'Постарайся ещё.')
-    elif call.data == 'keyAnswer8':
-        bot.send_message(call.message.chat.id, 'Результат теста 2/3'+'\n'+'Почти молодец!')
-    elif call.data == 'keyAnswer9':
-        bot.send_message(call.message.chat.id, 'Результат теста 3/3'+'\n'+'Теперь мы знаем, кто лучший сотрудник КОМПО!')
 
     elif call.data == 'test2':
-        bot.send_message(call.message.chat.id, '😉 Тут скоро будут тесты')
+        bot.send_message(call.message.chat.id, '😉 Тут скоро будет тест 2')
     elif call.data == 'metoda1':
         bot.send_message(call.message.chat.id, 'Методичка 1 '+ '\n' +
          'После упорной работы по внедрению системы 5S ,наблюдая улучшения, сотрудники начинают говорить: «Мы сделали это!» Они могут расслабиться, успокоиться на некоторое время (или, что еще хуже, вообще опустить руки). '+ '\n' +
