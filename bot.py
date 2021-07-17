@@ -1,6 +1,5 @@
 import telebot
 import config
-import random
 import sqlite3
 
 from telebot import types
