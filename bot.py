@@ -6,14 +6,12 @@ from telebot import types
 
 bot = telebot.TeleBot(config.TOKEN)
 
-
 @bot.message_handler(commands=['start'])
 def welcome(message):
     sti = open('static/welcome.tgs', 'rb')
     bot.send_sticker(message.chat.id, sti)
     connect = sqlite3.connect('KompoDB.db')
     cursor = connect.cursor()
-
     cursor.execute("""CREATE TABLE IF NOT EXISTS users(
         id INTEGER,
         user_name TEXT,
@@ -39,26 +37,21 @@ def get_name(message): #получаем имя
 
 def get_surname(message, name): #получаем фамилию
     surname = message.text;
-    keyboard = types.InlineKeyboardMarkup(); #наша клавиатура
-    key_yes = types.InlineKeyboardButton(text='Да', callback_data='yes'); #кнопка «Да»
-    keyboard.add(key_yes); #добавляем кнопку в клавиатуру
-    key_no= types.InlineKeyboardButton(text='Нет', callback_data='no');
-    keyboard.add(key_no);
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2); #наша клавиатура
+    keyboard.add(types.KeyboardButton("Да"),types.KeyboardButton("Нет"));
     question = 'Вас зовут '+name+' '+surname+'?';
-    bot.send_message(message.from_user.id, text=question, reply_markup=keyboard)
+    #bot.send_message(message.from_user.id, text=question, reply_markup=keyboard)
+    msg = bot.send_message(message.chat.id, question,reply_markup=keyboard)
+    bot.register_next_step_handler(msg,user_answer,name,surname)
 
-@bot.callback_query_handler(func=lambda call: True)
-
-def callback_worker(call):
-    if call.data == "yes": #call.data это callback_data, которую мы указали при объявлении кнопки код сохранения данных, или их обработки
+def user_answer(message,name,surname):
+    if message.text == "Да":
+        bot.send_message(message.chat.id, 'Обработка да'+name+surname)
         connect = sqlite3.connect('KompoDB.db')
         cursor = connect.cursor()
-        people_id = call.from_user.id
-        name = get_surname.name
-        surname = get_surname.surname
+        people_id = message.from_user.id
         cursor.execute(f"SELECT id FROM users WHERE id = {people_id}")
         data = cursor.fetchone()
-        # check id in db
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, selective=False)
         item1 = types.KeyboardButton("❔ Тест")
         item2 = types.KeyboardButton("⚙️ Настройки")
@@ -70,15 +63,17 @@ def callback_worker(call):
             user = [people_id, name, surname]
             cursor.execute("INSERT INTO users VALUES(?,?,?);", user)
             connect.commit()
-
-            bot.send_message(call.message.chat.id, 'Запомню : )', reply_markup=markup)
+            bot.send_message(message.chat.id, 'Запомню : )', reply_markup=markup)
         else:
-            bot.send_message(call.message.chat.id, 'На ваше телеграмм id заригистрирован пользователь', reply_markup=markup)
+           bot.send_message(message.chat.id, 'На ваше телеграмм id заригистрирован пользователь', reply_markup=markup)
+    elif message.text =="Нет":
+        bot.send_message(message.chat.id, 'Введите корректное имя: ')
+        bot.register_next_step_handler(message, get_name);
 
-    elif call.data == "no":
-        bot.send_message(call.message.chat.id, 'Введите корректное имя: ')
-        bot.register_next_step_handler(call.message, get_name);
-    elif call.data == 'phone':
+@bot.callback_query_handler(func=lambda call: True)
+
+def callback_worker(call):
+    if call.data == 'phone':
         bot.send_message(call.message.chat.id, '+375339113030')
     elif call.data == 'student':
         markup = types.InlineKeyboardMarkup(row_width=2)
@@ -113,19 +108,37 @@ def callback_worker(call):
         key2 = types.InlineKeyboardButton("Тест 1", callback_data='test1')
         key3 = types.InlineKeyboardButton("Методичка 2", callback_data='metoda2')
         key4 = types.InlineKeyboardButton("Тест 2", callback_data='test2')
-        markup.add(key1, key2, key3, key4)
+        key5 = types.InlineKeyboardButton("Методичка 3", callback_data='metoda3')
+        key6 = types.InlineKeyboardButton("Тест 3", callback_data='test3')
+        key7 = types.InlineKeyboardButton("Методичка 4", callback_data='metoda4')
+        key8 = types.InlineKeyboardButton("Методичка 5", callback_data='metoda5')
+        markup.add(key1, key2, key3, key4, key5, key6, key7, key8)
         bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
     elif call.data == 'result':
         bot.send_message(call.message.chat.id, 'Курс: \n Номер теста: \n 1: 9/10 \n 2: \n 3: \n Проходной балл: 100 \n Ваш балл: 9  ')
 
     elif call.data == 'test1':
         for i in range(10):
-            markup = types.InlineKeyboardMarkup(row_width=2)
-            key1 = types.InlineKeyboardButton("1", callback_data='keyAnswer1')
-            key2 = types.InlineKeyboardButton("2", callback_data='keyAnswer2')
-            key3 = types.InlineKeyboardButton("3", callback_data='keyAnswer3')
+            connect = sqlite3.connect('KompoDB.db')
+            cursor = connect.cursor()
+            question_arr = cursor.execute('SELECT question FROM test_question WHERE question_number == ?', (i+1,)).fetchone()
+            question = question_arr[0]
+
+            markup = types.InlineKeyboardMarkup(row_width=3)
+            key1 = types.InlineKeyboardButton("1", callback_data='1')
+            key2 = types.InlineKeyboardButton("2", callback_data='2')
+            key3 = types.InlineKeyboardButton("3", callback_data='3')
             markup.add(key1, key2, key3)
-            bot.send_message(call.message.chat.id, 'Выберите вариант ответ на вопрос ' + str(i+1) +' :', reply_markup=markup)
+            bot.send_message(call.message.chat.id, "Вопрос " + str(i+1)+ ":\n" + question , reply_markup=markup)
+
+            #answer_arr = cursor.execute('SELECT right_answer FROM test_question WHERE question_number == ?', (i+1,)).fetchone()
+            #answer = answer_arr[0]
+            #bot.register_next_step_handler(call.message.chat.id, answer)
+
+            #if (call.data == str(answer)):
+            #    bot.send_message(call.message.chat.id, "Правильный ответ")
+            #else:
+            #    bot.send_message(call.message.chat.id, "Неправильный ответ")
 
 
     elif call.data == 'test2':
