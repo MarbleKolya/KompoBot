@@ -5,7 +5,7 @@ import sqlite3
 from telebot import types
 
 bot = telebot.TeleBot(config.TOKEN)
-
+i=0
 @bot.message_handler(commands=['start'])
 def welcome(message):
     sti = open('static/welcome.tgs', 'rb')
@@ -67,8 +67,37 @@ def user_answer(message,name,surname):
         bot.send_message(message.chat.id, 'Введите корректное имя: ')
         bot.register_next_step_handler(message, get_name);
 
-def test(message):
-    bot.send_message(message.chat.id, "Типа теста" + str(message))
+def test_number(message):
+    connect = sqlite3.connect('KompoDB.db')
+    cursor = connect.cursor()
+    question_arr = cursor.execute('SELECT question FROM test_question WHERE test == ? ORDER BY question_number', (message.text)).fetchall()
+    answer_arr = cursor.execute('SELECT right_answer FROM test_question WHERE test == ? ORDER BY question_number', (message.text)).fetchall()
+    msg = bot.send_message(message.chat.id, "На прохождение тестов дается бесконечное количество времени и попыток, но в зачёт идет только первое прохождение теста.  " + message.text)
+    bot.register_next_step_handler(msg, test, question_arr , answer_arr)
+
+def test(message, question_arr , answer_arr):
+
+    bot.send_message(message.chat.id, "Мы тут")
+    while i<len(question_arr):
+        question = question_arr[i]
+        right_answer = answer_arr[i]
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3); #наша клавиатура
+        keyboard.add(types.KeyboardButton("1"),types.KeyboardButton("2"),types.KeyboardButton("3"));
+
+        user_answer = bot.send_message(message.chat.id,"Вопрос "+ ":\n" + str(question) + str(right_answer) , reply_markup=keyboard)
+        msg = bot.register_next_step_handler(user_answer,test,question_arr,answer_arr)
+        if user_answer == right_answer:
+            bot.send_message(message.chat.id, "И это правильный ответ!!!!")
+        i=i+1
+        return
+    else:
+        msg = bot.send_message(message.chat.id, "Тест закончен")
+
+    #people_id =  message.from_user.id
+
+    #result =[people_id, test_number, score]
+
+    #cursor.execute("INSERT INTO users_result VALUES(?,?,?);", result)
 
 @bot.callback_query_handler(func=lambda call: True)
 
@@ -76,22 +105,10 @@ def callback_worker(call):
     connect = sqlite3.connect('KompoDB.db')
     cursor = connect.cursor()
     if call.data == 'test1':
-        for i in range(10):
-            question_arr = cursor.execute('SELECT question FROM test_question WHERE question_number == ?', (i+1,)).fetchone()
-            question = question_arr[0]
-            markup = types.InlineKeyboardMarkup(row_width=3)
-            key1 = types.InlineKeyboardButton("1", callback_data='1')
-            key2 = types.InlineKeyboardButton("2", callback_data='2')
-            key3 = types.InlineKeyboardButton("3", callback_data='3')
-            markup.add(key1, key2, key3)
-            bot.send_message(call.message.chat.id, "Вопрос " + str(i+1)+ ":\n" + question , reply_markup=markup)
-            #answer_arr = cursor.execute('SELECT right_answer FROM test_question WHERE question_number == ?', (i+1,)).fetchone()
-            #answer = answer_arr[0]
-            #bot.register_next_step_handler(call.message.chat.id, answer)
-            #if (call.data == str(answer)):
-            #    bot.send_message(call.message.chat.id, "Правильный ответ")
-            #else:
-            #    bot.send_message(call.message.chat.id, "Неправильный ответ")
+        #Сделать обратотку номера теста
+        number = bot.send_message(call.message.chat.id, "Напиши номер теста")
+        bot.register_next_step_handler(number, test_number)
+
     elif call.data == 'phone':
         bot.send_message(call.message.chat.id, '+375339113030')
     elif call.data == 'student':
@@ -102,7 +119,7 @@ def callback_worker(call):
     elif call.data == 'worker':
         markup = types.InlineKeyboardMarkup(row_width=2)
         key1 = types.InlineKeyboardButton("Офис", callback_data='office')
-        key2 = types.InlineKeyboardButton("Машинное производство", callback_data='machineproduct')
+        key2 = types.InlineKeyboardButton("МП", callback_data='machineproduct')
         markup.add(key1, key2)
         bot.send_message(call.message.chat.id, 'Выберите рабочее место:', reply_markup=markup)
     elif call.data == 'machineproduct':
@@ -154,7 +171,7 @@ def lalala(message):
             keyStudend = types.InlineKeyboardButton("👨‍🎓 Студенты ", callback_data='student')
             keyResult = types.InlineKeyboardButton("😱 Результаты ", callback_data='result')
             markup.add(keyWorker, keyStudend,keyResult)
-            bot.send_message(message.chat.id, 'На прохождение тестов дается бесконечное количество времени и попыток, но в зачот идет только первое прохождение тестов. Если Вы являетесь сотрудником Компо, то выберите соответствующую кнопку. Если Вы только начинаетв обучение, то выберите кнопку студент:', reply_markup=markup)
+            bot.send_message(message.chat.id, 'Если Вы являетесь сотрудником Компо, то выберите соответствующую кнопку. Если Вы только начинаетв обучение, то выберите кнопку студент:', reply_markup=markup)
         elif message.text == '⚙️ Настройки':
             markup = types.InlineKeyboardMarkup(row_width=2)
             keyResName = types.InlineKeyboardButton("🙅‍♂️ Сбросить имя", callback_data='resName')
