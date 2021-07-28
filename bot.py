@@ -5,7 +5,6 @@ import sqlite3
 from telebot import types
 
 bot = telebot.TeleBot(config.TOKEN)
-i=0
 @bot.message_handler(commands=['start'])
 def welcome(message):
     sti = open('static/welcome.tgs', 'rb')
@@ -50,7 +49,7 @@ def user_answer(message,name,surname):
         cursor.execute(f"SELECT id FROM users WHERE id = {people_id}")
         data = cursor.fetchone()
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, selective=False)
-        item1 = types.KeyboardButton("❔ Тест")
+        item1 = types.KeyboardButton("❓ Тест")
         item2 = types.KeyboardButton("⚙️ Настройки")
         item3 = types.KeyboardButton("📚 Лекции")
         item4 = types.KeyboardButton("📞 Контакты")
@@ -124,10 +123,10 @@ def callback_worker(call):
         bot.send_message(call.message.chat.id, 'Выберите рабочее место:', reply_markup=markup)
     elif call.data == 'machineproduct':
         markup = types.InlineKeyboardMarkup(row_width=2)
-        key1 = types.InlineKeyboardButton("Метода1", callback_data='metoda11')
-        key2 = types.InlineKeyboardButton("Тест1", callback_data='test11')
-        key3 = types.InlineKeyboardButton("Метода2", callback_data='metoda12')
-        key4 = types.InlineKeyboardButton("Тест2", callback_data='test12')
+        key1 = types.InlineKeyboardButton("Часть 1", callback_data='metoda11')
+        key2 = types.InlineKeyboardButton("Тест 1", callback_data='test11')
+        key3 = types.InlineKeyboardButton("Часть 2", callback_data='metoda12')
+        key4 = types.InlineKeyboardButton("Тест 2", callback_data='test12')
         markup.add(key1, key2, key3,key4)
         msg = bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
         bot.register_next_step_handler(msg, test)
@@ -139,13 +138,13 @@ def callback_worker(call):
         bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
     elif call.data == 'office':
         markup = types.InlineKeyboardMarkup(row_width=2)
-        key1 = types.InlineKeyboardButton("Методичка 1", callback_data='metoda1', url="https://drive.google.com/drive/folders/1SrpXFa2VA6w5z7PCr084Md4zEkXOpUQD?usp=sharing")
+        key1 = types.InlineKeyboardButton("Часть 1", callback_data='metoda1', url="https://drive.google.com/drive/folders/1SrpXFa2VA6w5z7PCr084Md4zEkXOpUQD?usp=sharing")
         key2 = types.InlineKeyboardButton("Тест 1", callback_data='test1')
-        key3 = types.InlineKeyboardButton("Методичка 2", callback_data='metoda2', url="https://drive.google.com/drive/folders/1TA-wpMNR2_JUb8zl3E9Eg3SIG7QX_pGl?usp=sharing")
+        key3 = types.InlineKeyboardButton("Часть 2", callback_data='metoda2', url="https://drive.google.com/drive/folders/1TA-wpMNR2_JUb8zl3E9Eg3SIG7QX_pGl?usp=sharing")
         key4 = types.InlineKeyboardButton("Тест 2", callback_data='test2')
-        key5 = types.InlineKeyboardButton("Методичка 3", callback_data='metoda3', url="https://drive.google.com/drive/folders/1TVClZ4pPA3Z7t70vF1QXR_hMPpdEd1Dp?usp=sharing")
+        key5 = types.InlineKeyboardButton("Часть 3", callback_data='metoda3', url="https://drive.google.com/drive/folders/1TVClZ4pPA3Z7t70vF1QXR_hMPpdEd1Dp?usp=sharing")
         key6 = types.InlineKeyboardButton("Тест 3", callback_data='test3')
-        key7 = types.InlineKeyboardButton("Методичка 4", callback_data='metoda4', url="https://drive.google.com/drive/folders/1TZUzOpKV_SFo6UXPlwHZgAUh3Pt8gYyu?usp=sharing")
+        key7 = types.InlineKeyboardButton("Часть 4", callback_data='metoda4', url="https://drive.google.com/drive/folders/1TZUzOpKV_SFo6UXPlwHZgAUh3Pt8gYyu?usp=sharing")
         key8 = types.InlineKeyboardButton("Тест 4", callback_data='test4')
         markup.add(key1, key2, key3, key4, key5, key6, key7, key8)
         bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
