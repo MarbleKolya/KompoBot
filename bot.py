@@ -31,7 +31,6 @@ def get_name(message): #получаем имя
     bot.send_message(message.from_user.id, 'Введите вашу настоящую фамилию: ');
     bot.register_next_step_handler(message, get_surname, name);
 
-
 def get_surname(message, name): #получаем фамилию
     surname = message.text;
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2); #наша клавиатура
@@ -66,34 +65,71 @@ def user_answer(message,name,surname):
         bot.send_message(message.chat.id, 'Введите корректное имя: ')
         bot.register_next_step_handler(message, get_name);
 
+
+
+#####################################################################################
+
+
 def test_number(message):
     connect = sqlite3.connect('KompoDB.db')
     cursor = connect.cursor()
     question_arr = cursor.execute('SELECT question FROM test_question WHERE test == ? ORDER BY question_number', (message.text)).fetchall()
     answer_arr = cursor.execute('SELECT right_answer FROM test_question WHERE test == ? ORDER BY question_number', (message.text)).fetchall()
-    msg = bot.send_message(message.chat.id, "На прохождение тестов дается бесконечное количество времени и попыток, но в зачёт идет только первое прохождение теста.  " + message.text)
-    bot.register_next_step_handler(msg, test, question_arr , answer_arr)
 
-def test(message, question_arr , answer_arr):
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1);
+    keyboard.add(types.KeyboardButton("Начать"))
 
-    bot.send_message(message.chat.id, "Мы тут")
-    while i<len(question_arr):
-        question = question_arr[i]
-        right_answer = answer_arr[i]
-        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3); #наша клавиатура
+    msg = bot.send_message(message.chat.id, "На прохождение тестов дается бесконечное количество времени и попыток, но в зачёт идет только первое прохождение теста.  ", reply_markup=keyboard)
+    number_question = 0
+    score = 0
+    bot.register_next_step_handler(msg, test, question_arr , answer_arr, number_question,score)
+    #test(msg, question_arr , answer_arr, number_question,score)
+
+
+def test(message, question_arr , answer_arr, number_question, score):
+    if int(number_question)<len(question_arr):
+        true_answer = answer_arr[number_question]
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3);
         keyboard.add(types.KeyboardButton("1"),types.KeyboardButton("2"),types.KeyboardButton("3"));
-
-        user_answer = bot.send_message(message.chat.id,"Вопрос "+ ":\n" + str(question) + str(right_answer) , reply_markup=keyboard)
-        msg = bot.register_next_step_handler(user_answer,test,question_arr,answer_arr)
-        if user_answer == right_answer:
-            bot.send_message(message.chat.id, "И это правильный ответ!!!!")
-        i=i+1
-        return
+        bot.send_message(message.chat.id,"Вопрос " + str(number_question+1))
+        message = bot.send_message(message.chat.id, question_arr[number_question], reply_markup=keyboard)
+        bot.register_next_step_handler(message,answer,question_arr,answer_arr, number_question, score, true_answer)
     else:
-        msg = bot.send_message(message.chat.id, "Тест закончен")
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, selective=False)
+        item1 = types.KeyboardButton("❓ Тест")
+        item2 = types.KeyboardButton("⚙️ Настройки")
+        item3 = types.KeyboardButton("📚 Лекции")
+        item4 = types.KeyboardButton("📞 Контакты")
+        markup.add(item1, item3, item4, item2)
+        msg = bot.send_message(message.chat.id, "Тест закончен \n Ваш балл: " + str(score), reply_markup=markup)
+        #connect = sqlite3.connect('KompoDB.db')
 
+def answer(message,question_arr,answer_arr, number_question, score, true_answer):
+    mt = str(message.text)
+    ta = str(true_answer[0])
+    if message.text == "1":
+        if mt == ta:
+            score += 1
+        number_question += 1
+        test(message, question_arr , answer_arr, number_question, score)
+    elif message.text == "2":
+        if mt == ta:
+            score += 1
+        number_question += 1
+        test(message, question_arr , answer_arr, number_question, score)
+    elif message.text == "3":
+        if mt == ta:
+            score += 1
+        number_question += 1
+        test(message, question_arr , answer_arr, number_question, score)
+
+
+    #msg = bot.register_next_step_handler(user_answer,test,question_arr,answer_arr, number_question, score)
+    #test(message, question_arr , answer_arr, number_question, score)
+
+
+    #cursor = connect.cursor()
     #people_id =  message.from_user.id
-
     #result =[people_id, test_number, score]
 
     #cursor.execute("INSERT INTO users_result VALUES(?,?,?);", result)
@@ -164,7 +200,7 @@ def callback_worker(call):
 @bot.message_handler(content_types=['text'])
 def lalala(message):
      if message.chat.type == 'private':
-        if message.text == '❔ Тест':
+        if message.text == '❓ Тест':
             markup = types.InlineKeyboardMarkup(row_width=2)
             keyWorker = types.InlineKeyboardButton("👷‍♂️ Сотруднки КОМПО", callback_data='worker')
             keyStudend = types.InlineKeyboardButton("👨‍🎓 Студенты ", callback_data='student')
