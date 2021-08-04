@@ -184,7 +184,9 @@ def callback_worker(call):
         key22 = types.InlineKeyboardButton("Тест 11", callback_data='test15')
         key23 = types.InlineKeyboardButton("Часть 12", callback_data='metoda4', url="https://drive.google.com/drive/folders/1TZUzOpKV_SFo6UXPlwHZgAUh3Pt8gYyu?usp=sharing")
         key24 = types.InlineKeyboardButton("Тест 12", callback_data='test16')
-        markup.add(key1, key2, key3, key4, key5, key6, key7, key8, key9, key10,key11,key12,key13,key14,key15,key16,key17,key18,key19,key20,key21,key22,key23,key24)
+        key25 = types.InlineKeyboardButton("Часть 13", callback_data='metoda4', url="https://drive.google.com/drive/folders/1TZUzOpKV_SFo6UXPlwHZgAUh3Pt8gYyu?usp=sharing")
+        key26 = types.InlineKeyboardButton("Тест 13", callback_data='test17')
+        markup.add(key1, key2, key3, key4, key5, key6, key7, key8, key9, key10,key11,key12,key13,key14,key15,key16,key17,key18,key19,key20,key21,key22,key23,key24,key25,key26)
         bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
         #bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Тест выбран')
         #bot.register_next_step_handler(msg, test)
@@ -219,11 +221,10 @@ def lalala(message):
             markup.add(keyWorker, keyStudend,keyResult)
             bot.send_message(message.chat.id, 'Если Вы являетесь сотрудником Компо, то выберите соответствующую кнопку. Если Вы только начинаетв обучение, то выберите кнопку студент:', reply_markup=markup)
         elif message.text == '⚙️ Настройки':
-            markup = types.InlineKeyboardMarkup(row_width=2)
-            keyResName = types.InlineKeyboardButton("🙅‍♂️ Сбросить имя", callback_data='resName')
+            markup = types.InlineKeyboardMarkup(row_width=1)
             keyTechHelp = types.InlineKeyboardButton("🆘 Тех. поддержка", callback_data='techHelp', url ="https://t.me/Ros_Mic")
             markup.add(keyResName, keyTechHelp)
-            bot.send_message(message.chat.id, 'В настройках Вы можете изменить своё имя и написать в тех. поддержку', reply_markup=markup)
+            bot.send_message(message.chat.id, 'В настройках Вы можете изменить своё имя написав в тех. поддержку', reply_markup=markup)
         elif message.text == '📚 Лекции':
             markup = types.InlineKeyboardMarkup(row_width=2)
             item1 = types.InlineKeyboardButton("📖 Лекции", callback_data='lecs', url="https://drive.google.com/drive/folders/1CTXTahfl6nSvhXh61aYB5mI1IyKDArT6?usp=sharing")
@@ -244,9 +245,9 @@ def lalala(message):
             connect = sqlite3.connect('KompoDB.db')
             cursor = connect.cursor()
             bot.send_message(message.chat.id, 'Таблица результатов обновленна, переведите в базу данных для скачавания')
-            cursor.execute("""DELETE FROM total_result
-                        INSERT INTO total_result
-                        select u.id as user_id,user_name, user_secondName,
+            cursor.execute("""delete from total_result;
+                            INSERT INTO total_result
+                            select u.id as user_id,user_name, user_secondName,
                             result_test1.score as result_test1,
                             result_test2.score as result_test2,
                             result_test3.score as result_test3,
@@ -341,5 +342,4 @@ def lalala(message):
                             ) total_resultMP
                             on u.id=total_resultMP.user_id
                     """)
-            bot.send_message(message.chat.id, 'Таблица результатов обновленна, переведите в базу данных для скачавания')
 bot.polling(none_stop=True)
