@@ -1,2 +1,3 @@
 config
 telebot
+sqlite3

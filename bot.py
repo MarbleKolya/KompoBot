@@ -92,7 +92,7 @@ def test(message, test_number, question_arr , answer_arr, number_question, score
         item3 = types.KeyboardButton("📚 Лекции")
         item4 = types.KeyboardButton("📞 Контакты")
         markup.add(item1, item3, item4, item2)
-        msg = bot.send_message(message.chat.id, "Тест " +str(test_number) +" закончен \n Ваш балл: " + str(score), reply_markup=markup)
+        msg = bot.send_message(message.chat.id, "Тест закончен \nВаш балл: " + str(score), reply_markup=markup)
 
 
 def answer(message,test_number, question_arr,answer_arr, number_question, score, true_answer):
@@ -126,7 +126,6 @@ def callback_worker(call):
         if call.data == 'test'+str(i):
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Тест выбран')
             test_number = str(i)
-            bot.send_message(call.message.chat.id,test_number)
             connect = sqlite3.connect('KompoDB.db')
             cursor = connect.cursor()
             question_arr = cursor.execute('SELECT question FROM test_question WHERE test == ? ORDER BY question_number', (test_number,)).fetchall()
@@ -137,14 +136,6 @@ def callback_worker(call):
             number_question = 0
             score = 0
             bot.register_next_step_handler(msg, test ,test_number, question_arr , answer_arr, number_question,score)
-            #keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1);
-            #markup = types.InlineKeyboardMarkup(row_width=2)
-            #key1 = types.InlineKeyboardButton("Часть "+str(i),url=url_arr[i-1])
-            #markup.add(key1)
-            #bot.send_message(call.message.chat.id, "Для успешного прохождения теста изучите материалы: ", reply_markup=markup)
-            #keyboard.add(types.KeyboardButton(str(i)))
-            #klc = bot.send_message(call.message.chat.id, "После успешного изучения материалов нажмите кнопку ниже 👇🏻",reply_markup=keyboard)
-            #bot.register_next_step_handler(klc, test_number)
     if call.data == 'phone':
         bot.send_message(call.message.chat.id, '+375339113030')
     elif call.data == 'student':
@@ -160,42 +151,38 @@ def callback_worker(call):
         bot.send_message(call.message.chat.id, 'Выберите рабочее место:', reply_markup=markup)
     elif call.data == 'machineproduct':
         markup = types.InlineKeyboardMarkup(row_width=2)
-        key1 = types.InlineKeyboardButton("Часть 1", callback_data='metoda1', url="https://drive.google.com/drive/folders/1SrpXFa2VA6w5z7PCr084Md4zEkXOpUQD?usp=sharing")
+        key1 = types.InlineKeyboardButton("Часть 1", callback_data='metoda1', url="https://drive.google.com/drive/folders/1ddxdq0ubhu0YZ8v-skzF0sYny1NygM1e?usp=sharing")
         key2 = types.InlineKeyboardButton("Тест 1", callback_data='test5')
-        key3 = types.InlineKeyboardButton("Часть 2", callback_data='metoda2', url="https://drive.google.com/drive/folders/1TA-wpMNR2_JUb8zl3E9Eg3SIG7QX_pGl?usp=sharing")
+        key3 = types.InlineKeyboardButton("Часть 2", callback_data='metoda2', url="https://drive.google.com/drive/folders/11oN_GBF8ExWwOjMo1_itJZ0tVQCWDcCg?usp=sharing")
         key4 = types.InlineKeyboardButton("Тест 2", callback_data='test6')
-        key5 = types.InlineKeyboardButton("Часть 3", callback_data='metoda3', url="https://drive.google.com/drive/folders/1TVClZ4pPA3Z7t70vF1QXR_hMPpdEd1Dp?usp=sharing")
+        key5 = types.InlineKeyboardButton("Часть 3", callback_data='metoda3', url="https://drive.google.com/drive/folders/1xAsdkP3oV5HSrFhXy9uRObuPVqPj-a8L?usp=sharing")
         key6 = types.InlineKeyboardButton("Тест 3", callback_data='test7')
-        key7 = types.InlineKeyboardButton("Часть 4", callback_data='metoda4', url="https://drive.google.com/drive/folders/1TZUzOpKV_SFo6UXPlwHZgAUh3Pt8gYyu?usp=sharing")
+        key7 = types.InlineKeyboardButton("Часть 4", callback_data='metoda4', url="https://drive.google.com/drive/folders/117n-ogdgf3_2ebVPh3lwT9Vx2lR5-wFZ?usp=sharing")
         key8 = types.InlineKeyboardButton("Тест 4", callback_data='test8')
-        key9 = types.InlineKeyboardButton("Часть 5", callback_data='metoda1', url="https://drive.google.com/drive/folders/1SrpXFa2VA6w5z7PCr084Md4zEkXOpUQD?usp=sharing")
+        key9 = types.InlineKeyboardButton("Часть 5", callback_data='metoda1', url="https://drive.google.com/drive/folders/1PcB62rcoaI9HUYS6jFX6IpNkbvid0zE4?usp=sharing")
         key10 = types.InlineKeyboardButton("Тест 5", callback_data='test9')
-        key11 = types.InlineKeyboardButton("Часть 6", callback_data='metoda2', url="https://drive.google.com/drive/folders/1TA-wpMNR2_JUb8zl3E9Eg3SIG7QX_pGl?usp=sharing")
+        key11 = types.InlineKeyboardButton("Часть 6", callback_data='metoda2', url="https://drive.google.com/drive/folders/17lTkORYkkU8NOUsjrvT_TG4fkAOqHEjq?usp=sharing")
         key12 = types.InlineKeyboardButton("Тест 6", callback_data='test10')
-        key13 = types.InlineKeyboardButton("Часть 7", callback_data='metoda3', url="https://drive.google.com/drive/folders/1TVClZ4pPA3Z7t70vF1QXR_hMPpdEd1Dp?usp=sharing")
+        key13 = types.InlineKeyboardButton("Часть 7", callback_data='metoda3', url="https://drive.google.com/drive/folders/1qSxK1gcpHR2DZeqkG1zvgoJMGzze4u98?usp=sharing")
         key14 = types.InlineKeyboardButton("Тест 7", callback_data='test11')
-        key15 = types.InlineKeyboardButton("Часть 8", callback_data='metoda4', url="https://drive.google.com/drive/folders/1TZUzOpKV_SFo6UXPlwHZgAUh3Pt8gYyu?usp=sharing")
+        key15 = types.InlineKeyboardButton("Часть 8", callback_data='metoda4', url="https://drive.google.com/drive/folders/1fBzSM51okuvkv4LFEnaPdLQvaJ6Hfh67?usp=sharing")
         key16 = types.InlineKeyboardButton("Тест 8", callback_data='test12')
-        key17 = types.InlineKeyboardButton("Часть 9", callback_data='metoda1', url="https://drive.google.com/drive/folders/1SrpXFa2VA6w5z7PCr084Md4zEkXOpUQD?usp=sharing")
+        key17 = types.InlineKeyboardButton("Часть 9", callback_data='metoda1', url="https://drive.google.com/drive/folders/1ytZKhyGNIPhw8nyBiOWP1WOBufZWlcnU?usp=sharing")
         key18 = types.InlineKeyboardButton("Тест 9", callback_data='test13')
-        key19 = types.InlineKeyboardButton("Часть 10", callback_data='metoda2', url="https://drive.google.com/drive/folders/1TA-wpMNR2_JUb8zl3E9Eg3SIG7QX_pGl?usp=sharing")
+        key19 = types.InlineKeyboardButton("Часть 10", callback_data='metoda2', url="https://drive.google.com/drive/folders/1h7G0F0Nt13TS--lZ7oeIgGcKEJKjLe2b?usp=sharing")
         key20 = types.InlineKeyboardButton("Тест 10", callback_data='test14')
-        key21 = types.InlineKeyboardButton("Часть 11", callback_data='metoda3', url="https://drive.google.com/drive/folders/1TVClZ4pPA3Z7t70vF1QXR_hMPpdEd1Dp?usp=sharing")
+        key21 = types.InlineKeyboardButton("Часть 11", callback_data='metoda3', url="https://drive.google.com/drive/folders/1wppuUeQHgroWFsVt-4kaePeXdwaQCbE-?usp=sharing")
         key22 = types.InlineKeyboardButton("Тест 11", callback_data='test15')
-        key23 = types.InlineKeyboardButton("Часть 12", callback_data='metoda4', url="https://drive.google.com/drive/folders/1TZUzOpKV_SFo6UXPlwHZgAUh3Pt8gYyu?usp=sharing")
+        key23 = types.InlineKeyboardButton("Часть 12", callback_data='metoda4', url="https://drive.google.com/drive/folders/1PzIEUhtzVhiTIYOu53JoPgMQzYQjfiOj?usp=sharing")
         key24 = types.InlineKeyboardButton("Тест 12", callback_data='test16')
-        key25 = types.InlineKeyboardButton("Часть 13", callback_data='metoda4', url="https://drive.google.com/drive/folders/1TZUzOpKV_SFo6UXPlwHZgAUh3Pt8gYyu?usp=sharing")
+        key25 = types.InlineKeyboardButton("Часть 13", callback_data='metoda4', url="https://drive.google.com/drive/folders/1ss18g9-LvFVJPHbKib251hsazJ_V9_U2?usp=sharing")
         key26 = types.InlineKeyboardButton("Тест 13", callback_data='test17')
         markup.add(key1, key2, key3, key4, key5, key6, key7, key8, key9, key10,key11,key12,key13,key14,key15,key16,key17,key18,key19,key20,key21,key22,key23,key24,key25,key26)
         bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
         #bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Тест выбран')
         #bot.register_next_step_handler(msg, test)
     elif call.data == 'testStudent':
-        markup = types.InlineKeyboardMarkup(row_width=2)
-        key1 = types.InlineKeyboardButton("Методичка Студента", callback_data='metoda1')
-        key2 = types.InlineKeyboardButton("Тест Студента", callback_data='test1')
-        markup.add(key1, key2)
-        bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
+        bot.send_message(call.message.chat.id, 'В скором времени будут добавлены тесты для студента')
     elif call.data == 'office':
         markup = types.InlineKeyboardMarkup(row_width=2)
         key1 = types.InlineKeyboardButton("Часть 1", callback_data='metoda1', url="https://drive.google.com/drive/folders/1SrpXFa2VA6w5z7PCr084Md4zEkXOpUQD?usp=sharing")
@@ -219,11 +206,11 @@ def lalala(message):
             keyStudend = types.InlineKeyboardButton("👨‍🎓 Студенты ", callback_data='student')
             keyResult = types.InlineKeyboardButton("😱 Результаты ", callback_data='result')
             markup.add(keyWorker, keyStudend,keyResult)
-            bot.send_message(message.chat.id, 'Если Вы являетесь сотрудником Компо, то выберите соответствующую кнопку. Если Вы только начинаетв обучение, то выберите кнопку студент:', reply_markup=markup)
+            bot.send_message(message.chat.id, 'Если Вы являетесь сотрудником Компо, то выберите соответствующую кнопку. Если Вы только начинаете обучение, то выберите кнопку студент:', reply_markup=markup)
         elif message.text == '⚙️ Настройки':
             markup = types.InlineKeyboardMarkup(row_width=1)
             keyTechHelp = types.InlineKeyboardButton("🆘 Тех. поддержка", callback_data='techHelp', url ="https://t.me/Ros_Mic")
-            markup.add(keyResName, keyTechHelp)
+            markup.add(keyTechHelp)
             bot.send_message(message.chat.id, 'В настройках Вы можете изменить своё имя написав в тех. поддержку', reply_markup=markup)
         elif message.text == '📚 Лекции':
             markup = types.InlineKeyboardMarkup(row_width=2)
@@ -239,7 +226,7 @@ def lalala(message):
             item4 = types.InlineKeyboardButton("💻 Facebook", callback_data='facebook', url="https://www.facebook.com/kompoequipment")
 
             markup.add(item1, item2, item3, item4)
-            bot.send_message(message.chat.id, 'Здесь Вы можете свзаться с нами', reply_markup=markup)
+            bot.send_message(message.chat.id, 'Здесь Вы можете связаться с нами:', reply_markup=markup)
 
         elif message.text == '/Update_Result':
             connect = sqlite3.connect('KompoDB.db')

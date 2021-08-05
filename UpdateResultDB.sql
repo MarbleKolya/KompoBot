@@ -1,5 +1,5 @@
-DELETE FROM total_result 
-INSERT INTO total_result 
+DELETE FROM total_result ;
+INSERT INTO total_result
 select u.id as user_id,user_name, user_secondName,
 result_test1.score as result_test1,
 result_test2.score as result_test2,
