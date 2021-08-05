@@ -64,7 +64,42 @@ def user_answer(message,name,surname):
     elif message.text =="Нет":
         bot.send_message(message.chat.id, 'Введите корректное имя: ')
         bot.register_next_step_handler(message, get_name);
+##############################
 
+def result(message):
+    connect = sqlite3.connect('KompoDB.db')
+    cursor = connect.cursor()
+    cursor.execute(f"SELECT test_number, score FROM users_result WHERE user_id = {message.from_user.id} ORDER BY test_number")
+    records = cursor.fetchall()
+    records =[[]]
+    lenght = len(records)
+    nl = '\n'
+    for i in range(16):
+        cursor.execute(f"SELECT test_number, score FROM users_result WHERE user_id = {message.from_user.id} AND test_number = {i+1}")
+        data = cursor.fetchall()
+        if len(data) == 0:
+            records.append([[i+1],["-"]])
+        else:
+            records.append(data)
+    for i in range(16):
+        row = records[i]
+        if i == 0 :
+            message = "Курс: Бережливое производство\nОФИС \n"
+            message += f'Тест {i+1}: {row[1] if row[0] == i+1 else "-" }{nl}'
+        elif (i>0 & i<=4) | i > 6:
+            message += f'Тест {i+1}: {row[1] if row[0] == i+1 else "-" }{nl}'
+        elif i == 5:
+            message += "МП\n"
+            message += f'Тест {i+1}: {row[1] if row[0] == i+1 else "-" }{nl}'
+
+
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, selective=False)
+    item1 = types.KeyboardButton("❓ Тест")
+    item2 = types.KeyboardButton("⚙️ Настройки")
+    item3 = types.KeyboardButton("📚 Лекции")
+    item4 = types.KeyboardButton("📞 Контакты")
+    markup.add(item1, item3, item4, item2)
+    bot.send_message(message.chat.id, message, reply_markup=markup)
 
 
 #####################################################################################
@@ -82,6 +117,18 @@ def test(message, test_number, question_arr , answer_arr, number_question, score
         cursor = connect.cursor()
         people_id = message.from_user.id
         result = [people_id, test_number, score]
+        connect = sqlite3.connect('KompoDB.db')
+        cursor = connect.cursor()
+        people_id = message.from_user.id
+        cursor.execute(f"SELECT user_id FROM users_result WHERE user_id = {people_id} and test_number = {test_number}")
+        data = cursor.fetchone()
+        if data is None:
+            #add values in users
+            result = [people_id, test_number, score]
+            cursor.execute("INSERT INTO users_result VALUES(?,?,?);", result)
+            connect.commit()
+        else:
+           bot.send_message(message.chat.id, 'Вы уже проходили '+str(test_number)+'-й тест')
         # обработка на повторяящийся результат теста
         cursor.execute("INSERT INTO users_result VALUES(?,?,?);", result)
         connect.commit()
@@ -196,7 +243,12 @@ def callback_worker(call):
         markup.add(key1, key2, key3, key4, key5, key6, key7, key8)
         bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
     elif call.data == 'result':
-        bot.send_message(call.message.chat.id, 'Курс: Бережливое производство\n Номер теста: \n 1: 9/10 \n 2: \n 3: \n Проходной балл: 100 \n Ваш балл: 9  ')
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3);
+        keyboard.add(types.KeyboardButton("Обновить"))
+        message = bot.send_message(call.message.chat.id, 'Для обновления ваших результатов нажмите кнопку ниже', reply_markup = keyboard)
+        bot.register_next_step_handler(message, result)
+        #'Курс: Бережливое производство\n Номер теста: \n 1: 9/10 \n 2: \n 3: \n Проходной балл: 100 \n Ваш балл: 9 ')
+
 @bot.message_handler(content_types=['text'])
 def lalala(message):
      if message.chat.type == 'private':
@@ -232,7 +284,7 @@ def lalala(message):
             connect = sqlite3.connect('KompoDB.db')
             cursor = connect.cursor()
             bot.send_message(message.chat.id, 'Таблица результатов обновленна, переведите в базу данных для скачавания')
-            cursor.execute("""delete from total_result;
+            cursor.executescript("""delete from total_result;
                             INSERT INTO total_result
                             select u.id as user_id,user_name, user_secondName,
                             result_test1.score as result_test1,
