@@ -20,7 +20,7 @@ def welcome(message):
     connect.commit()
     #регистрация, обработка имени и фамилии
     if message.text == '/start':
-        bot.send_message(message.chat.id, "Добро пожаловать, {0.first_name}!\nЯ - <b>{1.first_name}</b>, бот созданный чтобы пройти курс по бережливому производству.".format(message.from_user, bot.get_me()), parse_mode='html')
+        bot.send_message(message.chat.id, "Добро пожаловать, {0.first_name}!\nЯ - <b>{1.first_name}</b>, бот, созданный, чтобы пройти курс по бережливому производству.".format(message.from_user, bot.get_me()), parse_mode='html')
         bot.send_message(message.from_user.id, "Введите ваше настоящее имя :");
         bot.register_next_step_handler(message, get_name); #следующий шаг – функция get_name
     else:
@@ -64,45 +64,135 @@ def user_answer(message,name,surname):
     elif message.text =="Нет":
         bot.send_message(message.chat.id, 'Введите корректное имя: ')
         bot.register_next_step_handler(message, get_name);
-##############################
 
 def result(message):
     connect = sqlite3.connect('KompoDB.db')
     cursor = connect.cursor()
-    cursor.execute(f"SELECT test_number, score FROM users_result WHERE user_id = {message.from_user.id} ORDER BY test_number")
-    records = cursor.fetchall()
-    records =[[]]
-    lenght = len(records)
+    cursor.executescript("""delete from total_result;
+                    INSERT INTO total_result
+                    select u.id as user_id,user_name, user_secondName,
+                    result_test1.score as result_test1,
+                    result_test2.score as result_test2,
+                    result_test3.score as result_test3,
+                    result_test4.score as result_test4,
+                    result_test5.score as result_test5,
+                    result_test6.score as result_test6,
+                    result_test7.score as result_test7,
+                    result_test8.score as result_test8,
+                    result_test9.score as result_test9,
+                    result_test10.score as result_test10,
+                    result_test11.score as result_test11,
+                    result_test12.score as result_test12,
+                    result_test13.score as result_test13,
+                    result_test14.score as result_test14,
+                    result_test15.score as result_test15,
+                    result_test16.score as result_test16,
+                    result_test17.score as result_test17,
+                    total_resultOffice.Total_Score as Total_ScoreOffice,
+                    total_resultMP.Total_Score as Total_ScoreMP,
+                    (total_resultOffice.Total_Score * 100 / 40)||'%' as ProgressOffice,
+                    (total_resultMP.Total_Score * 100 / 130)||'%' as ProgressMP,
+                    total_resultOffice.test_completed as TestCompletedOffice,
+                    total_resultMP.test_completed as TestCompletedMP,
+                    iif(total_resultOffice.test_completed=4, 1,0) as CompletedOfiiceCourse,
+                    iif(total_resultMP.test_completed=13, 1,0) as CompletedMPCourse,
+                    iif(total_resultOffice.Total_Score=40, 'Yes','NO') as CompletedOfiiceCourseSuccessfull,
+                    iif(total_resultMP.Total_Score=130, 'Yes','NO') as CompletedMPCourseSuccessfull
+                    from users u
+                    left JOIN users_result result_test1
+                    on u.id=result_test1.user_id
+                    and result_test1.test_number = 1
+                    left JOIN users_result result_test2
+                    on u.id=result_test2.user_id
+                    and result_test2.test_number = 2
+                    left JOIN users_result result_test3
+                    on u.id=result_test3.user_id
+                    and result_test3.test_number = 3
+                    left JOIN users_result result_test4
+                    on u.id=result_test4.user_id
+                    and result_test4.test_number = 4
+                    left JOIN users_result result_test5
+                    on u.id=result_test5.user_id
+                    and result_test5.test_number = 5
+                    left JOIN users_result result_test6
+                    on u.id=result_test6.user_id
+                    and result_test6.test_number = 6
+                    left JOIN users_result result_test7
+                    on u.id=result_test7.user_id
+                    and result_test7.test_number = 7
+                    left JOIN users_result result_test8
+                    on u.id=result_test8.user_id
+                    and result_test8.test_number = 8
+                    left JOIN users_result result_test9
+                    on u.id=result_test9.user_id
+                    and result_test9.test_number = 9
+                    left JOIN users_result result_test10
+                    on u.id=result_test10.user_id
+                    and result_test10.test_number = 10
+                    left JOIN users_result result_test11
+                    on u.id=result_test11.user_id
+                    and result_test11.test_number = 11
+                    left JOIN users_result result_test12
+                    on u.id=result_test12.user_id
+                    and result_test12.test_number = 12
+                    left JOIN users_result result_test13
+                    on u.id=result_test13.user_id
+                    and result_test13.test_number = 13
+                    left JOIN users_result result_test14
+                    on u.id=result_test14.user_id
+                    and result_test14.test_number = 14
+                    left JOIN users_result result_test15
+                    on u.id=result_test15.user_id
+                    and result_test15.test_number = 15
+                    left JOIN users_result result_test16
+                    on u.id=result_test16.user_id
+                    and result_test16.test_number = 16
+                    left JOIN users_result result_test17
+                    on u.id=result_test17.user_id
+                    and result_test17.test_number = 17
+                    left JOIN (
+                    Select user_id, sum(score) as Total_Score,
+                    sum(case when ifnull(score,0) > 0 then 1 else 0 END) as test_completed  from users_result
+                    WHERE test_number<=4
+                    GROUP by user_id
+                    ) total_resultOffice
+                    on u.id=total_resultOffice.user_id
+                    left JOIN (
+                    Select user_id, sum(score) as Total_Score,
+                    sum(case when ifnull(score,0) > 0 then 1 else 0 END) as test_completed  from users_result
+                    WHERE test_number>4 AND test_number<=17
+                    GROUP by user_id
+                    ) total_resultMP
+                    on u.id=total_resultMP.user_id
+            """)
+    cursor.execute(f"SELECT user_name,user_secondName,result_test1,result_test2,result_test3,result_test4,result_test5,result_test6,result_test7,result_test8,result_test9,result_test10,result_test11,result_test12,result_test13,result_test14,result_test15,result_test16,result_test17,ProgressMP,ProgressOffice FROM total_result WHERE user_id ={message.from_user.id}")
+    resultAllTest = cursor.fetchall()
     nl = '\n'
-    for i in range(16):
-        cursor.execute(f"SELECT test_number, score FROM users_result WHERE user_id = {message.from_user.id} AND test_number = {i+1}")
-        data = cursor.fetchall()
-        if len(data) == 0:
-            records.append([[i+1],["-"]])
-        else:
-            records.append(data)
-    for i in range(16):
-        row = records[i]
+    for i in range(17):
         if i == 0 :
-            message = "Курс: Бережливое производство\nОФИС \n"
-            message += f'Тест {i+1}: {row[1] if row[0] == i+1 else "-" }{nl}'
-        elif (i>0 & i<=4) | i > 6:
-            message += f'Тест {i+1}: {row[1] if row[0] == i+1 else "-" }{nl}'
-        elif i == 5:
-            message += "МП\n"
-            message += f'Тест {i+1}: {row[1] if row[0] == i+1 else "-" }{nl}'
-
-
+            msg = "\nКурс 2 \n"
+            msg += f'Тест {i+1}:  {resultAllTest[0][i+2] if resultAllTest[0][i+2]!=None else "-"} из 10{nl}'
+        elif i<=3>0:
+            msg += f'Тест {i+1}:  {resultAllTest[0][i+2] if resultAllTest[0][i+2]!=None else "-"} из 10{nl}'
+        elif i == 4:
+            msg += f'Курс 1{nl}'
+            msg += f'Тест {i-3}:  {resultAllTest[0][i+2] if resultAllTest[0][i+2]!=None else "-"} из 10{nl}'
+        elif i >= 5:
+            msg += f'Тест {i-3}:  {resultAllTest[0][i+2] if resultAllTest[0][i+2]!=None else "-"} из 10{nl}'
+    kurs1index = msg.find('Курс 1')
+    kurs1 = msg[kurs1index:len(msg)-1]
+    msg = msg.replace(kurs1,"")
+    msg = kurs1+msg
+    msg = "Бережливое производство \n" + msg
+    msg += f'Прогресс Курс 1:  {resultAllTest[0][19] if resultAllTest[0][19]!=None else "-"}{nl}'
+    msg += f'Прогресс Курс 2:  {resultAllTest[0][20] if resultAllTest[0][20]!=None else "-"}{nl}'
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, selective=False)
     item1 = types.KeyboardButton("❓ Тест")
     item2 = types.KeyboardButton("⚙️ Настройки")
     item3 = types.KeyboardButton("📚 Лекции")
     item4 = types.KeyboardButton("📞 Контакты")
     markup.add(item1, item3, item4, item2)
-    bot.send_message(message.chat.id, message, reply_markup=markup)
-
-
-#####################################################################################
+    bot.send_message(message.chat.id, msg, reply_markup=markup)
 
 def test(message, test_number, question_arr , answer_arr, number_question, score):
     if int(number_question)<len(question_arr):
@@ -116,22 +206,17 @@ def test(message, test_number, question_arr , answer_arr, number_question, score
         connect = sqlite3.connect('KompoDB.db')
         cursor = connect.cursor()
         people_id = message.from_user.id
-        result = [people_id, test_number, score]
         connect = sqlite3.connect('KompoDB.db')
         cursor = connect.cursor()
         people_id = message.from_user.id
         cursor.execute(f"SELECT user_id FROM users_result WHERE user_id = {people_id} and test_number = {test_number}")
         data = cursor.fetchone()
         if data is None:
-            #add values in users
             result = [people_id, test_number, score]
             cursor.execute("INSERT INTO users_result VALUES(?,?,?);", result)
             connect.commit()
         else:
-           bot.send_message(message.chat.id, 'Вы уже проходили '+str(test_number)+'-й тест')
-        # обработка на повторяящийся результат теста
-        cursor.execute("INSERT INTO users_result VALUES(?,?,?);", result)
-        connect.commit()
+           bot.send_message(message.chat.id, 'Вы уже проходили этот тест.')
 
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, selective=False)
         item1 = types.KeyboardButton("❓ Тест")
@@ -186,16 +271,13 @@ def callback_worker(call):
     if call.data == 'phone':
         bot.send_message(call.message.chat.id, '+375339113030')
     elif call.data == 'student':
-        markup = types.InlineKeyboardMarkup(row_width=2)
-        key1 = types.InlineKeyboardButton("ТЕСТ", callback_data='testStudent')
-        markup.add(key1)
-        bot.send_message(call.message.chat.id, 'Готовы к прохождению теста?', reply_markup=markup)
+        bot.send_message(call.message.chat.id, 'В скором времени будут добавлены тесты для студента')
     elif call.data == 'worker':
         markup = types.InlineKeyboardMarkup(row_width=2)
-        key1 = types.InlineKeyboardButton("Офис", callback_data='office')
-        key2 = types.InlineKeyboardButton("МП", callback_data='machineproduct')
-        markup.add(key1, key2)
-        bot.send_message(call.message.chat.id, 'Выберите рабочее место:', reply_markup=markup)
+        key1 = types.InlineKeyboardButton("Курс 2", callback_data='office')
+        key2 = types.InlineKeyboardButton("Курс 1", callback_data='machineproduct')
+        markup.add(key2, key1)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберите курс для прохождения: ', reply_markup=markup)
     elif call.data == 'machineproduct':
         markup = types.InlineKeyboardMarkup(row_width=2)
         key1 = types.InlineKeyboardButton("Часть 1", callback_data='metoda1', url="https://drive.google.com/drive/folders/1ddxdq0ubhu0YZ8v-skzF0sYny1NygM1e?usp=sharing")
@@ -225,11 +307,11 @@ def callback_worker(call):
         key25 = types.InlineKeyboardButton("Часть 13", callback_data='metoda4', url="https://drive.google.com/drive/folders/1ss18g9-LvFVJPHbKib251hsazJ_V9_U2?usp=sharing")
         key26 = types.InlineKeyboardButton("Тест 13", callback_data='test17')
         markup.add(key1, key2, key3, key4, key5, key6, key7, key8, key9, key10,key11,key12,key13,key14,key15,key16,key17,key18,key19,key20,key21,key22,key23,key24,key25,key26)
-        bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
+
+        #bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
         #bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Тест выбран')
         #bot.register_next_step_handler(msg, test)
-    elif call.data == 'testStudent':
-        bot.send_message(call.message.chat.id, 'В скором времени будут добавлены тесты для студента')
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберите тест для прохождения: ', reply_markup=markup)
     elif call.data == 'office':
         markup = types.InlineKeyboardMarkup(row_width=2)
         key1 = types.InlineKeyboardButton("Часть 1", callback_data='metoda1', url="https://drive.google.com/drive/folders/1SrpXFa2VA6w5z7PCr084Md4zEkXOpUQD?usp=sharing")
@@ -241,7 +323,7 @@ def callback_worker(call):
         key7 = types.InlineKeyboardButton("Часть 4", callback_data='metoda4', url="https://drive.google.com/drive/folders/1TZUzOpKV_SFo6UXPlwHZgAUh3Pt8gYyu?usp=sharing")
         key8 = types.InlineKeyboardButton("Тест 4", callback_data='test4')
         markup.add(key1, key2, key3, key4, key5, key6, key7, key8)
-        bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберите тест для прохождения: ', reply_markup=markup)
     elif call.data == 'result':
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3);
         keyboard.add(types.KeyboardButton("Обновить"))
@@ -254,16 +336,16 @@ def lalala(message):
      if message.chat.type == 'private':
         if message.text == '❓ Тест':
             markup = types.InlineKeyboardMarkup(row_width=2)
-            keyWorker = types.InlineKeyboardButton("👷‍♂️ Сотруднки КОМПО", callback_data='worker')
+            keyWorker = types.InlineKeyboardButton("👷‍♂️ Сотрудники КОМПО", callback_data='worker')
             keyStudend = types.InlineKeyboardButton("👨‍🎓 Студенты ", callback_data='student')
             keyResult = types.InlineKeyboardButton("😱 Результаты ", callback_data='result')
             markup.add(keyWorker, keyStudend,keyResult)
-            bot.send_message(message.chat.id, 'Если Вы являетесь сотрудником Компо, то выберите соответствующую кнопку. Если Вы только начинаете обучение, то выберите кнопку студент:', reply_markup=markup)
+            bot.send_message(message.chat.id, 'Если Вы являетесь сотрудником Компо, то выберите соответствующую кнопку. Если Вы не являетесь сотрудником Компо, то выберите кнопку "Студенты".', reply_markup=markup)
         elif message.text == '⚙️ Настройки':
             markup = types.InlineKeyboardMarkup(row_width=1)
             keyTechHelp = types.InlineKeyboardButton("🆘 Тех. поддержка", callback_data='techHelp', url ="https://t.me/Ros_Mic")
             markup.add(keyTechHelp)
-            bot.send_message(message.chat.id, 'В настройках Вы можете изменить своё имя написав в тех. поддержку', reply_markup=markup)
+            bot.send_message(message.chat.id, 'Вы можете задать вопросы по работе бота, а также изменить своё имя, написав в тех. поддержку', reply_markup=markup)
         elif message.text == '📚 Лекции':
             markup = types.InlineKeyboardMarkup(row_width=2)
             item1 = types.InlineKeyboardButton("📖 Лекции", callback_data='lecs', url="https://drive.google.com/drive/folders/1CTXTahfl6nSvhXh61aYB5mI1IyKDArT6?usp=sharing")
@@ -283,7 +365,7 @@ def lalala(message):
         elif message.text == '/Update_Result':
             connect = sqlite3.connect('KompoDB.db')
             cursor = connect.cursor()
-            bot.send_message(message.chat.id, 'Таблица результатов обновленна, переведите в базу данных для скачавания')
+            bot.send_message(message.chat.id, 'Таблица результатов обновленна, перейдите в базу данных для скачавания')
             cursor.executescript("""delete from total_result;
                             INSERT INTO total_result
                             select u.id as user_id,user_name, user_secondName,

@@ -1,2 +1,96 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/i5-4570/Desktop/KompoBot/KompoDB.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4510"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,12:mainusers_result"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="test_question" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="121"/><column index="3" value="300"/><column index="4" value="95"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="total_result" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="70"/><column index="2" value="80"/><column index="3" value="126"/><column index="4" value="89"/><column index="5" value="89"/><column index="6" value="89"/><column index="7" value="89"/><column index="8" value="89"/><column index="9" value="89"/><column index="10" value="89"/><column index="11" value="89"/><column index="12" value="89"/><column index="13" value="97"/><column index="14" value="97"/><column index="15" value="97"/><column index="16" value="97"/><column index="17" value="97"/><column index="18" value="97"/><column index="19" value="97"/><column index="20" value="97"/><column index="21" value="122"/><column index="22" value="104"/><column index="23" value="103"/><column index="24" value="85"/><column index="25" value="141"/><column index="26" value="123"/><column index="27" value="156"/><column index="28" value="140"/><column index="29" value="227"/><column index="30" value="211"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="users" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="80"/><column index="3" value="126"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="users_result" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="2" mode="0"/></sort><column_widths><column index="1" value="70"/><column index="2" value="92"/><column index="3" value="44"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">DELETE FROM users
-</sql><current_tab id="0"/></tab_sql></sqlb_project>
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/i5-4570/Desktop/KompoBot/KompoDB.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4510"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,12:maintotal_result"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="test_question" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="121"/><column index="3" value="300"/><column index="4" value="95"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="total_result" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="70"/><column index="2" value="80"/><column index="3" value="126"/><column index="4" value="89"/><column index="5" value="89"/><column index="6" value="89"/><column index="7" value="89"/><column index="8" value="89"/><column index="9" value="89"/><column index="10" value="89"/><column index="11" value="89"/><column index="12" value="89"/><column index="13" value="97"/><column index="14" value="97"/><column index="15" value="97"/><column index="16" value="97"/><column index="17" value="97"/><column index="18" value="97"/><column index="19" value="97"/><column index="20" value="97"/><column index="21" value="122"/><column index="22" value="104"/><column index="23" value="103"/><column index="24" value="85"/><column index="25" value="141"/><column index="26" value="123"/><column index="27" value="156"/><column index="28" value="140"/><column index="29" value="227"/><column index="30" value="211"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="users" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="70"/><column index="2" value="80"/><column index="3" value="126"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="users_result" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="70"/><column index="2" value="92"/><column index="3" value="44"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">delete from total_result;
+                            INSERT INTO total_result
+                            select u.id as user_id,user_name, user_secondName,
+                            result_test1.score as result_test1,
+                            result_test2.score as result_test2,
+                            result_test3.score as result_test3,
+                            result_test4.score as result_test4,
+                            result_test5.score as result_test5,
+                            result_test6.score as result_test6,
+                            result_test7.score as result_test7,
+                            result_test8.score as result_test8,
+                            result_test9.score as result_test9,
+                            result_test10.score as result_test10,
+                            result_test11.score as result_test11,
+                            result_test12.score as result_test12,
+                            result_test13.score as result_test13,
+                            result_test14.score as result_test14,
+                            result_test15.score as result_test15,
+                            result_test16.score as result_test16,
+                            result_test17.score as result_test17,
+                            total_resultOffice.Total_Score as Total_ScoreOffice,
+                            total_resultMP.Total_Score as Total_ScoreMP,
+                            (total_resultOffice.Total_Score * 100 / 40)||'%' as ProgressOffice,
+                            (total_resultMP.Total_Score * 100 / 130)||'%' as ProgressMP,
+                            total_resultOffice.test_completed as TestCompletedOffice,
+                            total_resultMP.test_completed as TestCompletedMP,
+                            iif(total_resultOffice.test_completed=4, 1,0) as CompletedOfiiceCourse,
+                            iif(total_resultMP.test_completed=13, 1,0) as CompletedMPCourse,
+                            iif(total_resultOffice.Total_Score=40, 'Yes','NO') as CompletedOfiiceCourseSuccessfull,
+                            iif(total_resultMP.Total_Score=130, 'Yes','NO') as CompletedMPCourseSuccessfull
+                            from users u
+                            left JOIN users_result result_test1
+                            on u.id=result_test1.user_id
+                            and result_test1.test_number = 1
+                            left JOIN users_result result_test2
+                            on u.id=result_test2.user_id
+                            and result_test2.test_number = 2
+                            left JOIN users_result result_test3
+                            on u.id=result_test3.user_id
+                            and result_test3.test_number = 3
+                            left JOIN users_result result_test4
+                            on u.id=result_test4.user_id
+                            and result_test4.test_number = 4
+                            left JOIN users_result result_test5
+                            on u.id=result_test5.user_id
+                            and result_test5.test_number = 5
+                            left JOIN users_result result_test6
+                            on u.id=result_test6.user_id
+                            and result_test6.test_number = 6
+                            left JOIN users_result result_test7
+                            on u.id=result_test7.user_id
+                            and result_test7.test_number = 7
+                            left JOIN users_result result_test8
+                            on u.id=result_test8.user_id
+                            and result_test8.test_number = 8
+                            left JOIN users_result result_test9
+                            on u.id=result_test9.user_id
+                            and result_test9.test_number = 9
+                            left JOIN users_result result_test10
+                            on u.id=result_test10.user_id
+                            and result_test10.test_number = 10
+                            left JOIN users_result result_test11
+                            on u.id=result_test11.user_id
+                            and result_test11.test_number = 11
+                            left JOIN users_result result_test12
+                            on u.id=result_test12.user_id
+                            and result_test12.test_number = 12
+                            left JOIN users_result result_test13
+                            on u.id=result_test13.user_id
+                            and result_test13.test_number = 13
+                            left JOIN users_result result_test14
+                            on u.id=result_test14.user_id
+                            and result_test14.test_number = 14
+                            left JOIN users_result result_test15
+                            on u.id=result_test15.user_id
+                            and result_test15.test_number = 15
+                            left JOIN users_result result_test16
+                            on u.id=result_test16.user_id
+                            and result_test16.test_number = 16
+                            left JOIN users_result result_test17
+                            on u.id=result_test17.user_id
+                            and result_test17.test_number = 17
+                            left JOIN (
+                            Select user_id, sum(score) as Total_Score,
+                            sum(case when ifnull(score,0) &gt; 0 then 1 else 0 END) as test_completed  from users_result
+                            WHERE test_number&lt;=4
+                            GROUP by user_id
+                            ) total_resultOffice
+                            on u.id=total_resultOffice.user_id
+                            left JOIN (
+                            Select user_id, sum(score) as Total_Score,
+                            sum(case when ifnull(score,0) &gt; 0 then 1 else 0 END) as test_completed  from users_result
+                            WHERE test_number&gt;4 AND test_number&lt;=17
+                            GROUP by user_id
+                            ) total_resultMP
+                            on u.id=total_resultMP.user_id </sql><current_tab id="0"/></tab_sql></sqlb_project>
