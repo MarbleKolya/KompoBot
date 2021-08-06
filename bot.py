@@ -217,7 +217,6 @@ def test(message, test_number, question_arr , answer_arr, number_question, score
             connect.commit()
         else:
            bot.send_message(message.chat.id, 'Вы уже проходили этот тест.')
-
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, selective=False)
         item1 = types.KeyboardButton("❓ Тест")
         item2 = types.KeyboardButton("⚙️ Настройки")
@@ -307,11 +306,7 @@ def callback_worker(call):
         key25 = types.InlineKeyboardButton("Часть 13", callback_data='metoda4', url="https://drive.google.com/drive/folders/1ss18g9-LvFVJPHbKib251hsazJ_V9_U2?usp=sharing")
         key26 = types.InlineKeyboardButton("Тест 13", callback_data='test17')
         markup.add(key1, key2, key3, key4, key5, key6, key7, key8, key9, key10,key11,key12,key13,key14,key15,key16,key17,key18,key19,key20,key21,key22,key23,key24,key25,key26)
-
-        #bot.send_message(call.message.chat.id, 'Выберите тест для прохождения: ', reply_markup=markup)
-        #bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Тест выбран')
-        #bot.register_next_step_handler(msg, test)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберите тест для прохождения: ', reply_markup=markup)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберите тест для прохождения:  ', reply_markup=markup)
     elif call.data == 'office':
         markup = types.InlineKeyboardMarkup(row_width=2)
         key1 = types.InlineKeyboardButton("Часть 1", callback_data='metoda1', url="https://drive.google.com/drive/folders/1SrpXFa2VA6w5z7PCr084Md4zEkXOpUQD?usp=sharing")
@@ -323,7 +318,7 @@ def callback_worker(call):
         key7 = types.InlineKeyboardButton("Часть 4", callback_data='metoda4', url="https://drive.google.com/drive/folders/1TZUzOpKV_SFo6UXPlwHZgAUh3Pt8gYyu?usp=sharing")
         key8 = types.InlineKeyboardButton("Тест 4", callback_data='test4')
         markup.add(key1, key2, key3, key4, key5, key6, key7, key8)
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберите тест для прохождения: ', reply_markup=markup)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберитe тест для прохождения: ', reply_markup=markup)
     elif call.data == 'result':
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3);
         keyboard.add(types.KeyboardButton("Обновить"))
